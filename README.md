@@ -57,3 +57,9 @@ npm run test:e2e # or `npm run test:e2e:ci` for headless testing
 ```sh
 npm run lint
 ```
+
+## Run following commond to generate prisma tables
+
+```
+npx prisma db push
+```
