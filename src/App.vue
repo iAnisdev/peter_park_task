@@ -40,7 +40,7 @@
     <main class="-mt-32">
       <div class="max-w-8xl mx-auto pb-12 px-4 sm:px-6 lg:px-8">
         <div class="bg-white rounded-lg shadow px-5 py-6 sm:px-6">
-          <div class="rounded-lg h-96">
+          <div class="rounded-lg">
             <RouterView />
           </div>
         </div>
