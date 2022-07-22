@@ -17,12 +17,18 @@
                 class="text-3xl font-bold text-white"
                 v-else-if="$route.name === 'create'"
               >
-                Create New Parking Permits
+                Create New Parking Permit
+              </h1>
+              <h1
+                class="text-3xl font-bold text-white"
+                v-else-if="$route.name === 'edit'"
+              >
+                Edit Parking Permits
               </h1>
             </div>
             <div
               class="ml-4 mt-2 flex-shrink-0"
-              v-if="$route.name !== 'create'"
+              v-if="$route.name == 'home'"
             >
               <button
                 type="button"

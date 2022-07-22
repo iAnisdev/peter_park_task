@@ -12,6 +12,8 @@ export const useRecordStore = defineStore('record', {
     actions: {
         async fetchRecord(id) {
             const record = await Api().get(`/permits/${id}`);
+            this.record = record.data
+            return this.record
         },
         async fetchRecords() {
             const record = await Api().get('/permits');
@@ -22,7 +24,6 @@ export const useRecordStore = defineStore('record', {
         },
         async updateRecord(record) {
             const updatedRecord = await Api().put(`/permits/${record.id}`, record);
-            commit("setRecord", updatedRecord);
         },
         async deleteRecord(id) {
             await Api().delete(`/permits/${id}`);

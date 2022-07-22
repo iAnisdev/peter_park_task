@@ -83,6 +83,7 @@
           <td class="py-4 text-right text-sm font-medium sm:pr-6">
             <div class="flex justify-center">
               <button
+              @click="editRecord(record)"
                 class="mr-2 w-8 h-8 rounded-full bg-blue-800 p-2 text-white flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2  focus:ring-blue">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor" stroke-width="2">
@@ -152,6 +153,9 @@ export default {
         await this.deleteRecord(record.id)
         await this.fetchRecords();
       }
+    },
+    editRecord(record) {
+      this.$router.push(`/edit/${record.id}`)
     }
   },
   mounted() {

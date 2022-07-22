@@ -63,7 +63,7 @@
                     Save
                 </button>
                 <button type="submit" v-if="action === 'update'"
-                    click="updateRecord"
+                    @click="updateRecord"
                     class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Update
                 </button>
@@ -74,6 +74,9 @@
 
 <script>
 import { computed, ref  } from "vue";
+import { mapActions } from 'pinia'
+import {useRecordStore} from "../stores/record.js";
+
 export default {
     name: "RecordForm",
     props: {
@@ -82,7 +85,7 @@ export default {
             default: "new",
         },
         recordId: {
-            type: Number,
+            type: String,
             default: null,
         },
     },
@@ -173,6 +176,15 @@ export default {
                     this.isInvalidLicence = false;
                 }
             }
+        }
+    },
+    methods:{
+        ...mapActions(useRecordStore , ['fetchRecord']),
+    },
+    async mounted(){
+        if(this.action === 'update'){
+           let record = await this.fetchRecord(this.recordId)
+          this.record = record;
         }
     }
 }
