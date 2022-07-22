@@ -19,7 +19,7 @@
             <div class="mt-2">
                 <input type="text" name="licence" id="licence" v-model="record.licence"
                     class="block w-full border-0 p-4 rounded-md text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
-                    placeholder="Licence Plate Number" :disabled="record.country === ''" required/>
+                    placeholder="Licence Plate Number" :disabled="record.country === ''" required />
                 <p class="mt-2 text-sm text-red-600" id="email-error" v-if="isInvalidLicence">Invalid Licene Number for
                     {{ record.country }}</p>
             </div>
@@ -49,21 +49,30 @@
                     placeholder="Jane Smith" />
             </div>
         </div>
-
+        <div class="pt-1 px-2" v-if="action === 'update'">
+            <SwitchGroup as="div" class="flex items-center justify-between">
+                <span class="flex-grow flex flex-col">
+                    <SwitchLabel as="span" class="text-sm font-medium text-gray-900" passive>Permit status
+                    </SwitchLabel>
+                </span>
+                <Switch v-model="record.status"
+                    :class="[record.status ? 'bg-indigo-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500']">
+                    <span aria-hidden="true"
+                        :class="[record.status ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200']" />
+                </Switch>
+            </SwitchGroup>
+        </div>
         <div class="pt-1">
             <div class="flex justify-end">
-                <button type="button"
-                    @click="$router.push('/')"
+                <button type="button" @click="$router.push('/')"
                     class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Cancel
                 </button>
-                <button type="submit" v-if="action === 'new'"
-                    @click="saveRecord"
+                <button type="submit" v-if="action === 'new'" @click="saveRecord"
                     class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Save
                 </button>
-                <button type="submit" v-if="action === 'update'"
-                    @click="updateRecord"
+                <button type="submit" v-if="action === 'update'" @click="updateRecord"
                     class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Update
                 </button>
@@ -73,9 +82,10 @@
 </template>
 
 <script>
-import { computed, ref  } from "vue";
+import { computed, ref } from "vue";
 import { mapActions } from 'pinia'
-import {useRecordStore} from "../stores/record.js";
+import { useRecordStore } from "../stores/record.js";
+import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 
 export default {
     name: "RecordForm",
@@ -89,9 +99,14 @@ export default {
             default: null,
         },
     },
-    setup(props,{emit}) {
+    components: {
+        Switch,
+        SwitchGroup,
+        SwitchLabel,
+    },
+    setup(props, { emit }) {
         const record = ref({
-            id:null,
+            id: null,
             name: "",
             country: "",
             license: "",
@@ -107,20 +122,20 @@ export default {
             record.value.license = "";
             isInvalidLicence = ref(false);
         }
-        async function saveRecord(e){
-            if(this.isInvalidLicence){
+        async function saveRecord(e) {
+            if (this.isInvalidLicence) {
                 alert('Invalid Licence Number for ' + record.value.country);
             }
-            else{
+            else {
                 await emit('save', record.value);
             }
         }
 
-        async function updateRecord(e){
-            if(this.isInvalidLicence){
+        async function updateRecord(e) {
+            if (this.isInvalidLicence) {
                 alert('Invalid Licence Number for ' + record.value.country);
             }
-            else{
+            else {
                 await emit('update', record.value);
             }
         }
@@ -136,13 +151,13 @@ export default {
     watch: {
         record: {
             deep: true,
-            handler (newVal, oldVal) {
-                if(newVal.licence !== '' && newVal.licence !== undefined){
+            handler(newVal, oldVal) {
+                if (newVal.licence !== '' && newVal.licence !== undefined) {
                     //match the license number with regex for each country
                     switch (newVal.country) {
                         case "Germany":
                             if (!/^[A-ZÄÖÜ]{1,3}\-[ ]{0,1}[A-Z]{0,2}[0-9]{1,4}[H]{0,1}/.test(newVal.licence)) {
-                                 this.isInvalidLicence = true;
+                                this.isInvalidLicence = true;
                             } else {
                                 this.isInvalidLicence = false;
                             }
@@ -172,19 +187,19 @@ export default {
                             this.isInvalidLicence = false;
                             break;
                     }
-                }else{
+                } else {
                     this.isInvalidLicence = false;
                 }
             }
         }
     },
-    methods:{
-        ...mapActions(useRecordStore , ['fetchRecord']),
+    methods: {
+        ...mapActions(useRecordStore, ['fetchRecord']),
     },
-    async mounted(){
-        if(this.action === 'update'){
-           let record = await this.fetchRecord(this.recordId)
-          this.record = record;
+    async mounted() {
+        if (this.action === 'update') {
+            let record = await this.fetchRecord(this.recordId)
+            this.record = record;
         }
     }
 }
